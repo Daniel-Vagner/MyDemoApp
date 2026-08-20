@@ -3,48 +3,53 @@
 
 <PageTitle>Koncerty MeinKraft</PageTitle>   
 
-@* <h1>Koncerty MeinKraft</h1> *@
-<img src="MeinKraft_logo.png" width="50%"/>
+@try
+{
+    if (_shows is null)
+    {
+        <p><em>Načítání koncertů...</em></p>
+        @* <h1 class="text-danger">Došlo k chybě</h1> *@
+    }
+    else if (_shows.Length == 0)
+    {
+        <p>Aktuálně nejsou naplánovány žádné další koncerty.</p>
+    }
+    else
+    {
+        <img src="MeinKraft_logo.png" width="50%" alt="MeinKraft Logo"/>
 
-<h2 class="mt-5">Nadcházející koncerty</h2>
+        <h2 class="mt-5">Nadcházející koncerty</h2>
 
-@if (_shows is null)
-{
-    <p><em>Načítání koncertů...</em></p>
-}
-else if (_shows.Length == 0)
-{
-    <p>Aktuálně nejsou naplánovány žádné další koncerty.</p>
-}
-else
-{
-    <table class="table table-striped mt-3">
-        <thead>
-        <tr>
-            <th>Datum</th>
-            <th>Lokace</th>
-            <th>Město</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var show in _shows)
-        {
+        <table class="table table-striped mt-3">
+            <thead>
             <tr>
-                <td>@show.Date.ToString("dd MMM yyyy")</td>
-                <td>@show.Venue</td>
-                <td>@show.City</td>
+                <th>Datum</th>
+                <th>Lokace</th>
+                <th>Město</th>
             </tr>
-        }
-        </tbody>
-    </table>
-}
+            </thead>
+            <tbody>
+            @foreach (var show in _shows)
+            {
+                <tr>
+                    <td>@show.Date.ToString("dd MMM yyyy")</td>
+                    <td>@show.Venue</td>
+                    <td>@show.City</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
 
-@code {
+    @code {
     private Show[]? _shows;
 
     protected override async Task OnInitializedAsync()
     {
         _shows = await Http.GetFromJsonAsync<Show[]>("data/shows.json");
+        var tmp = _shows?.Length;
+
+        Console.WriteLine($"Number of shows: {tmp}");
     }
 
     private sealed class Show
@@ -53,4 +58,9 @@ else
         public string Venue { get; set; } = "";
         public string City { get; set; } = "";
     }
+}
+}
+catch(Exception ex)
+{
+    <p class="text-danger">Došlo k chybě: @ex.Message</p>
 }

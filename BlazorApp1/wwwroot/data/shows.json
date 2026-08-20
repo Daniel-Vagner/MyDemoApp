@@ -10,7 +10,7 @@
     "city": "Zlín"
   },
   {
-    "date": "2026-09-29",
+    "date": "2026-09-26",
     "venue": "Spranfest 2026",
     "city": "Koper (SI)"
   },
@@ -33,5 +33,10 @@
     "date": "2026-12-19",
     "venue": "TBA",
     "city": "Mladá Boleslav"
+  },
+  {
+    "date": "2027-05-18",
+    "venue": "Zlámaná hnáta",
+    "city":  "Přerov"
   }
 ]
