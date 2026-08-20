@@ -1,0 +1,56 @@
+﻿@page "/shows"
+@inject HttpClient Http
+
+<PageTitle>Koncerty MeinKraft</PageTitle>   
+
+@* <h1>Koncerty MeinKraft</h1> *@
+<img src="MeinKraft_logo.png" width="50%"/>
+
+<h2 class="mt-5">Nadcházející koncerty</h2>
+
+@if (_shows is null)
+{
+    <p><em>Načítání koncertů...</em></p>
+}
+else if (_shows.Length == 0)
+{
+    <p>Aktuálně nejsou naplánovány žádné další koncerty.</p>
+}
+else
+{
+    <table class="table table-striped mt-3">
+        <thead>
+        <tr>
+            <th>Datum</th>
+            <th>Lokace</th>
+            <th>Město</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var show in _shows)
+        {
+            <tr>
+                <td>@show.Date.ToString("dd MMM yyyy")</td>
+                <td>@show.Venue</td>
+                <td>@show.City</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Show[]? _shows;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _shows = await Http.GetFromJsonAsync<Show[]>("data/shows.json");
+    }
+
+    private sealed class Show
+    {
+        public DateOnly Date { get; set; }
+        public string Venue { get; set; } = "";
+        public string City { get; set; } = "";
+    }
+}
